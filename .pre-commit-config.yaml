@@ -1,0 +1,16 @@
+repos:
+  - repo: local
+    hooks:
+      - id: block-data-files
+        name: Block data files and HILDA paths
+        entry: python scripts/check_no_data_files.py
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: check-notebook-outputs
+        name: Refuse notebooks with outputs attached
+        entry: python scripts/check_notebook_outputs.py
+        language: system
+        pass_filenames: false
+        always_run: true
