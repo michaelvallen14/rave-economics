@@ -1,0 +1,20 @@
+[project]
+name = "rave-economics"
+version = "0.1.0"
+description = "Melbourne electronic music scene data (RA), long-run outcomes (NLSY97), and a bridging scenario model"
+requires-python = ">=3.11"
+dependencies = [
+    "pandas>=2.2",
+    "statsmodels>=0.14",
+    "networkx>=3.3",
+    "httpx>=0.27",
+    "duckdb>=1.0",
+]
+
+[dependency-groups]
+dev = [
+    "pre-commit>=3.7",
+]
+
+[tool.uv]
+package = false

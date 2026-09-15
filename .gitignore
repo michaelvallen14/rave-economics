@@ -1,0 +1,31 @@
+# --- data: never committed, see CLAUDE.md ---
+data/
+# called out explicitly: HILDA carries Criminal Code penalties under its
+# confidentiality deed if it leaves Australia (GitHub is US-hosted)
+data/hilda/
+
+# --- python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# --- virtual environments ---
+.venv/
+venv/
+
+# --- uv ---
+uv.lock.tmp
+
+# --- env / secrets ---
+.env
+.env.*
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- editor ---
+.vscode/
+.idea/
