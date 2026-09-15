@@ -47,6 +47,7 @@ SEED_EVENTS = [
     ("Symbiotic", "https://events.ticketbooth.com.au/tickets/transmission-elysium-aus-2024"),
     ("Symbiotic", "https://events.ticketbooth.com.au/tickets/hyperdome-2024"),
     ("Ultra Australia", "https://events.leapevents.com/tickets/ultra-australia-2026"),
+    ("BPM Events", "https://events.leapevents.com/event/meltdown-festival-2026"),
 ]
 
 
@@ -104,9 +105,10 @@ def main() -> int:
             "`/events` returns 404 on both. Individual event pages "
             "(`/event/<slug>` or `/tickets/<slug>`) work fine — there just "
             "isn't an index to crawl.",
-            "This spike therefore uses a curated seed list of 5 known events "
-            "across 4 promoters (MASIF, HSU, Symbiotic x2, Ultra Australia), "
-            "found by reading promoter pages' outbound links or web search — "
+            "This spike therefore uses a curated seed list of 6 known events "
+            "across 5 promoters (MASIF, HSU, Symbiotic x2, Ultra Australia, "
+            "BPM Events), found by reading promoter pages' outbound links "
+            "or web search — "
             "not discovered from the platform itself. A production version "
             "would need a maintained list of promoter pages to poll, not a "
             "single listing endpoint like Moshtix's search.",
@@ -129,7 +131,8 @@ def main() -> int:
         records=records,
         log=log,
         go_note=(
-            "Price viable across MASIF, HSU, Symbiotic and Ultra Australia — "
+            "Price viable across MASIF, HSU, Symbiotic, Ultra Australia and "
+            "BPM Events — "
             "Ticketbooth/Leap Events is a genuine multi-promoter source for "
             "the harder-styles/rave segment, not just one brand. Discovery "
             "is the open problem, not access: this platform needs a "
