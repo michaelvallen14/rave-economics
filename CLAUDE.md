@@ -55,7 +55,10 @@ overriding the data rule itself.
 
 Three parts are kept structurally separate — do not blur them:
 
-- `src/ra/` — Part A, Melbourne electronic music scene (RA scrape + analysis)
+- `src/ra/` — Part A, Australian electronic music/rave scene (multi-source
+  ticketing-platform scrape + analysis — ra.co is blocked; Moshtix,
+  Ticketbooth/Leap Events and Ticket Merchant passed feasibility instead,
+  see README.md's Limitations section)
 - `src/nlsy97/` — Part B, NLSY97 long-run outcomes analysis
 - `src/model/` — Part C, the scenario model bridging A and B. This is
   explicitly **not** a join and **not** a causal claim — it's a scenario
