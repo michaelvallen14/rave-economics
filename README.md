@@ -21,10 +21,10 @@ separate parts, described below.
     search UI.
   - **Ticketbooth/Leap Events** —
     [docs/ticketbooth-feasibility.md](docs/ticketbooth-feasibility.md), GO
-    (60% price completeness). Hosts MASIF, HSU's Knockout, Symbiotic, and
-    Ultra Australia. Has no crawlable listing page (root 403, `/events`
-    404) — needs a maintained seed list of promoter pages, not a single
-    search endpoint like Moshtix's.
+    (66.7% price completeness). Hosts MASIF, HSU's Knockout, Symbiotic,
+    Ultra Australia, and BPM Events' Meltdown Festival. Has no crawlable
+    listing page (root 403, `/events` 404) — needs a maintained seed list
+    of promoter pages, not a single search endpoint like Moshtix's.
   - **Ticket Merchant** —
     [docs/ticketmerchant-feasibility.md](docs/ticketmerchant-feasibility.md),
     GO (confirmed via Teletech). It's a **secondary/resale marketplace**
@@ -33,15 +33,18 @@ separate parts, described below.
     price/inflation analysis rather than just volume/venue/lineup.
   - **Megatix** —
     [docs/megatix-feasibility.md](docs/megatix-feasibility.md), GO
-    (confirmed via No Sleep Entertainment). Their own site
-    (nosleepent.com.au) is a client-rendered dead end, but Megatix is
-    where they actually sell tickets. Same caveat as Ticketbooth/Ticket
-    Merchant: Megatix's own `/events` browse page is a client-rendered
-    Nuxt.js SPA, so this needs a seed list too, not a crawlable index.
+    (confirmed via No Sleep Entertainment and Dangerous Goods
+    Entertainment). Both promoters' own ticket domains are client-rendered
+    dead ends (Dangerous Goods' own domain is Oztix white-labelled under
+    the hood — same problem as Oztix itself), but Megatix is where both
+    actually sell tickets. Same caveat as Ticketbooth/Ticket Merchant:
+    Megatix's own `/events` browse page is a client-rendered Nuxt.js SPA,
+    so this needs a seed list too, not a crawlable index.
   - **Confirmed dead ends** (client-side rendered SPA — no data without a
     real browser, out of scope per this project's no-evasion stance):
     Oztix, AREP (HSU's EPIK event), eventflo.io (Symbiotic's MARLO event),
-    and No Sleep Entertainment's own site.
+    No Sleep Entertainment's own site, and Dangerous Goods Entertainment's
+    own ticket domain.
   - None of the above has been turned into a real scraper yet — these are
     all feasibility spikes only.
 - **Part B is not causal.** It's a lagged-design association (drinking
