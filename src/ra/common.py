@@ -1,10 +1,13 @@
-"""Shared plumbing for the Part A ticketing-platform feasibility spikes
-(spike.py, spike_moshtix.py, spike_ticketbooth.py, spike_ticketmerchant.py).
+"""Shared plumbing for Part A's ticketing-platform feasibility spikes
+(spike.py, spike_moshtix.py, spike_ticketbooth.py, spike_ticketmerchant.py,
+spike_megatix.py) and the real scraper (scrape.py and friends) that
+followed them.
 
-Every spike probes a different site but follows the same shape: check
-robots.txt, fetch pages with an honest contact user agent, parse whatever
-schema.org Event/MusicEvent JSON-LD is on the page, and report field
-completeness against a price-completeness go/no-go threshold.
+Every source probes/scrapes a different site but follows the same shape:
+check robots.txt, fetch pages with an honest contact user agent, parse
+whatever schema.org Event/MusicEvent JSON-LD is on the page. The spikes
+additionally report field completeness against a price-completeness
+go/no-go threshold; the scraper just persists what it finds.
 """
 
 from __future__ import annotations
@@ -30,14 +33,17 @@ class EventRecord:
     date: str | None = None
     name: str | None = None
     venue: str | None = None
+    city: str | None = None
+    region: str | None = None
     lineup: str | None = None
     promoter: str | None = None
     genre_tags: str | None = None
     price: str | None = None
     attendance_indicator: str | None = None
+    source: str | None = None
 
 
-FIELD_NAMES = [f.name for f in fields(EventRecord) if f.name != "url"]
+FIELD_NAMES = [f.name for f in fields(EventRecord) if f.name not in ("url", "source")]
 
 
 @dataclass
@@ -83,8 +89,9 @@ def unescape(value: str | None) -> str | None:
     return html.unescape(value) if value else None
 
 
-def parse_event_from_jsonld(event: dict, url: str) -> EventRecord:
+def parse_event_from_jsonld(event: dict, url: str, source: str | None = None) -> EventRecord:
     location = event.get("location") or {}
+    address = location.get("address") or {}
     offers = event.get("offers") or []
     if isinstance(offers, dict):
         offers = [offers]
@@ -104,12 +111,27 @@ def parse_event_from_jsonld(event: dict, url: str) -> EventRecord:
         date=unescape(event.get("startDate")),
         name=unescape(event.get("name")),
         venue=unescape(location.get("name")),
+        city=unescape(address.get("addressLocality")) if isinstance(address, dict) else None,
+        region=unescape(address.get("addressRegion")) if isinstance(address, dict) else None,
         lineup=unescape(", ".join(performer_names)) if performer_names else None,
         promoter=unescape(organizer.get("name")) if isinstance(organizer, dict) else None,
         genre_tags=None,
         price=unescape(min(prices, key=float)) if prices else None,
         attendance_indicator=None,
+        source=source,
     )
+
+
+def dedupe_records(records: list[EventRecord]) -> list[EventRecord]:
+    """Drop duplicate events by URL, keeping the first occurrence."""
+    seen: set[str] = set()
+    deduped = []
+    for record in records:
+        if record.url in seen:
+            continue
+        seen.add(record.url)
+        deduped.append(record)
+    return deduped
 
 
 def completeness_table(records: list[EventRecord], intended_sample_size: int) -> dict[str, float]:
