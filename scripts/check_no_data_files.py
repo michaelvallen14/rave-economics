@@ -1,6 +1,6 @@
 """Pre-commit guard: refuse to commit data files or anything HILDA-related.
 
-See CLAUDE.md for the rules this enforces. Bypass only with
+See IMPORTANT_NOTES.md for the rules this enforces. Bypass only with
 `git commit --no-verify`, and only for a deliberate, reviewed reason.
 """
 
@@ -41,7 +41,7 @@ def main() -> int:
         return 0
 
     print("BLOCKED: staged file(s) look like data, which must never be committed.")
-    print("See CLAUDE.md — data/ (HILDA especially) never leaves this machine via git.\n")
+    print("See IMPORTANT_NOTES.md — data/ (HILDA especially) never leaves this machine via git.\n")
     for path, reason in problems:
         print(f"  {path}  [{reason}]")
     print("\nIf a staged file is a false positive, unstage it or rename it.")

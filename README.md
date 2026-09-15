@@ -59,8 +59,8 @@ separate parts, described below.
   Melbourne (Australia) are different populations entirely — Part C
   illustrates a plausible scenario, it does not estimate an effect.
 - **HILDA is not yet approved for this project.** It is referenced in
-  `CLAUDE.md`'s data rules pre-emptively, in case approval comes through
-  later, but no HILDA code or data exists in this repo yet.
+  `IMPORTANT_NOTES.md`'s data rules pre-emptively, in case approval comes
+  through later, but no HILDA code or data exists in this repo yet.
 - **Single-cohort data for Part B.** Part B is a single US birth cohort
   (NLSY97, born 1980-84) and doesn't generalise beyond it without a
   separate argument for why it should. Part A is now Australia-wide, not
@@ -80,13 +80,13 @@ This is a scaffold plus several completed feasibility checks — see
   analysis
 - `src/model/` — Part C: the scenario model bridging A and B
 - `sql/` — DuckDB is the SQL layer for this project
-- `data/` — never committed; see `CLAUDE.md`
+- `data/` — never committed; see `IMPORTANT_NOTES.md`
 - `outputs/figures/`, `outputs/tables/` — committed aggregates only
 
 ## Status
 
 Done this session: repo scaffold, data-handling rules and enforcement
-(`CLAUDE.md`, pre-commit hooks), and feasibility spikes for five
+(`IMPORTANT_NOTES.md`, pre-commit hooks), and feasibility spikes for five
 ticketing sources (ra.co, Moshtix, Ticketbooth/Leap Events, Ticket
 Merchant, Megatix).
 
@@ -105,7 +105,7 @@ uv run pre-commit install
 
 ## Data handling
 
-See [CLAUDE.md](CLAUDE.md) — short version: no data file is ever committed,
+See [IMPORTANT_NOTES.md](IMPORTANT_NOTES.md) — short version: no data file is ever committed,
 `data/` is gitignored, HILDA outputs are aggregates-only if and when HILDA
 is approved, and a pre-commit hook enforces both (bypass only with an
 explicit `git commit --no-verify`).
