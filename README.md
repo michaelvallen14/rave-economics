@@ -58,9 +58,16 @@ separate parts, described below.
   dataset is forbidden by the HILDA deed regardless, and NLSY97 (US) and RA
   Melbourne (Australia) are different populations entirely — Part C
   illustrates a plausible scenario, it does not estimate an effect.
-- **HILDA is not yet approved for this project.** It is referenced in
+- **HILDA is parked, not a dependency.** It's referenced in
   `IMPORTANT_NOTES.md`'s data rules pre-emptively, in case approval comes
-  through later, but no HILDA code or data exists in this repo yet.
+  through later, but no HILDA code or data exists in this repo yet, and the
+  project doesn't wait on it. Access runs through ADA Dataverse behind a
+  signed confidentiality deed and an Anubis bot-protection wall on the
+  dataset page itself — real friction for an independent project, with no
+  guaranteed timeline. Part B already stands on its own with NLSY97, and
+  Part C's scenario framing exists precisely so nothing here overclaims a
+  US-to-Australia link. If deed approval ever comes through, HILDA becomes
+  an upgrade path for Part B, not a blocker for shipping the rest.
 - **Single-cohort data for Part B.** Part B is a single US birth cohort
   (NLSY97, born 1980-84) and doesn't generalise beyond it without a
   separate argument for why it should. Part A is now Australia-wide, not
@@ -85,16 +92,45 @@ This is a scaffold plus several completed feasibility checks — see
 
 ## Status
 
-Done this session: repo scaffold, data-handling rules and enforcement
-(`IMPORTANT_NOTES.md`, pre-commit hooks), and feasibility spikes for five
+Done so far: repo scaffold, data-handling rules and enforcement
+(`IMPORTANT_NOTES.md`, pre-commit hooks), feasibility spikes for five
 ticketing sources (ra.co, Moshtix, Ticketbooth/Leap Events, Ticket
-Merchant, Megatix).
+Merchant, Megatix), and a real Part A scraper (`src/ra/scrape.py` and
+friends) built on top of the validated spikes — 211 unique events across
+the four working sources in the current local test run (200 Moshtix, 5
+Ticketbooth, 3 Ticket Merchant, 3 Megatix).
 
-Not yet built: the real Part A scraper (each spike above is feasibility
-only, not a production scraper), the NLSY97 analysis, and the Part C
-scenario model. Next for Part A: build the Moshtix/Ticketbooth/Ticket
-Merchant/Megatix scrapers for real, with the geo-filter fix (Moshtix) and
-seed-list maintenance (the other three) noted above.
+Genre classification is now real too (`src/ra/genre.py`): events are
+tagged "harder styles" (hardstyle, rawstyle, uptempo, frenchcore, hard
+techno, hard trance, gabber) by keyword/artist-name match against each
+event's name, lineup, **and description** text — precision-first, so it
+undercounts rather than overcounts. Description turned out to matter a
+lot: Ticketbooth/Leap Events leaves JSON-LD's `performer` field empty but
+writes the actual subgenre into the event description ("Hardstyle & Raw",
+"Happy Hard"), so adding description as a match source took tagged events
+from 1 to 9 without touching the seed list. Megatix has a hard ceiling
+here — its pages carry no description or embedded state at all (pure
+client-rendered Nuxt.js SPA), so its recall stays limited to event names
+only; going further would mean real browser rendering, which is out of
+scope per this project's no-evasion stance (see `src/ra/genre.py`).
+
+Also grew the Ticketbooth/Ticket Merchant/Megatix seed lists in
+`src/ra/seeds.py` with harder-styles-specific promoters (HTID, Dreamstate,
+more MASIF hardstyle nights, RAWZONE, Culture, Gearbox, Hard Nation) —
+211 → 226 events. One candidate (Ticket Merchant's "Knockout Outdoor
+Australian Tour 2026" page) was checked and skipped: it carries no
+Event/MusicEvent JSON-LD at all, so it's not usable with the current
+parser.
+
+Not yet built: the NLSY97 analysis (Part B) and the Part C scenario
+model — both empty scaffolds in `src/nlsy97/` and `src/model/`. Next for
+Part A: grow the Ticketbooth/Ticket Merchant/Megatix seed lists with
+harder-styles-focused promoters specifically, since Moshtix's general
+Dance/Electronic crawl and the current thin seed lists mostly aren't
+tagged as harder styles yet.
+
+HILDA was explored as a Part B upgrade path and parked — see Limitations
+above. It isn't blocking anything; Part B proceeds on NLSY97.
 
 ## Setup
 

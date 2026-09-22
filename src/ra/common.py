@@ -21,6 +21,8 @@ from datetime import datetime, timezone
 
 import httpx
 
+from src.ra.genre import classify_genre
+
 GO_THRESHOLD_PCT = 50
 JSON_LD_RE = re.compile(
     r'<script type="application/ld\+json"[^>]*>\s*(.*?)\s*</script>', re.DOTALL
@@ -106,16 +108,20 @@ def parse_event_from_jsonld(event: dict, url: str, source: str | None = None) ->
 
     organizer = event.get("organizer") or {}
 
+    name = unescape(event.get("name"))
+    lineup = unescape(", ".join(performer_names)) if performer_names else None
+    description = unescape(event.get("description"))
+
     return EventRecord(
         url=url,
         date=unescape(event.get("startDate")),
-        name=unescape(event.get("name")),
+        name=name,
         venue=unescape(location.get("name")),
         city=unescape(address.get("addressLocality")) if isinstance(address, dict) else None,
         region=unescape(address.get("addressRegion")) if isinstance(address, dict) else None,
-        lineup=unescape(", ".join(performer_names)) if performer_names else None,
+        lineup=lineup,
         promoter=unescape(organizer.get("name")) if isinstance(organizer, dict) else None,
-        genre_tags=None,
+        genre_tags=classify_genre(name, lineup, description),
         price=unescape(min(prices, key=float)) if prices else None,
         attendance_indicator=None,
         source=source,
