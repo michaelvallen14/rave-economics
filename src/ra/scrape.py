@@ -31,7 +31,12 @@ from src.ra.scrape_seeded import fetch_seeded_events
 DEFAULT_DB_PATH = "data/raw/ra/events.duckdb"
 
 
-def write_events(db_path: str, records) -> None:
+def write_events(db_path: str, records, sources_to_replace: list[str] | None = None) -> None:
+    """Persist records, first deleting any existing rows for
+    sources_to_replace. Without this, a source whose crawl logic changes
+    (e.g. Moshtix's category-filter fix) or whose seed list shrinks would
+    leave stale rows behind forever — upsert-by-url only ever adds/updates,
+    never removes what a re-run no longer finds."""
     Path(db_path).parent.mkdir(parents=True, exist_ok=True)
     con = duckdb.connect(db_path)
     try:
@@ -53,6 +58,11 @@ def write_events(db_path: str, records) -> None:
             )
             """
         )
+        if sources_to_replace:
+            con.executemany(
+                "DELETE FROM ra_events WHERE source = ?",
+                [(s,) for s in sources_to_replace],
+            )
         rows = [asdict(r) for r in records]
         con.executemany(
             """
@@ -96,7 +106,12 @@ def main() -> int:
             records += fetch_seeded_events(client, log)
 
     records = dedupe_records(records)
-    write_events(args.db_path, records)
+    sources_to_replace = []
+    if not args.skip_moshtix:
+        sources_to_replace.append("moshtix")
+    if not args.skip_seeded:
+        sources_to_replace += ["ticketbooth", "ticketmerchant", "megatix"]
+    write_events(args.db_path, records, sources_to_replace)
 
     print(f"Fetched {len(records)} unique events.")
     by_source: dict[str, int] = {}
