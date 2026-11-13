@@ -1,5 +1,7 @@
 # rave-economics
 
+**Status: unfinished.** This project is paused because the data it needs isn't available yet. The main event source (ra.co) blocks automated access, and the replacement ticketing sources only give partial coverage, so there's no analysis or result here yet. What's below documents the data work done so far.
+
 Australian electronic music/rave scene data, long-run outcome data (NLSY97),
 and a scenario model that bridges the two — kept as three structurally
 separate parts, described below.
